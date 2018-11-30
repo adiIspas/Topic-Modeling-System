@@ -1,11 +1,18 @@
 from processing.docs_processor import Processor
+from preparation.docs_reader import Reader
 from modeling.lda import LDA
 
-number_of_documents = 20
-number_of_words = 10
+documents_path = '/home/adrian/Unibuc/Probabilistic Programming/Topic-Modeling-System/data/raw'
 number_of_topics = 5
 
-data_temp = Processor.generate_data_temp(number_of_documents, number_of_words)
-lda_model = LDA(data_temp, number_of_topics, number_of_words)
+documents = Reader.read_documents(documents_path)
 
+processor = Processor("english")
+sorted_vocabulary, word_id, id_word, vocabulary_size = processor.create_vocabulary(documents)
+
+data = Processor.generate_data_from_documents(documents, vocabulary_size, word_id)
+lda_model = LDA(data, number_of_topics, vocabulary_size)
 lda_model.fit()
+
+lda_model.plot_word_distribution()
+lda_model.show_topic_words(id_word)
