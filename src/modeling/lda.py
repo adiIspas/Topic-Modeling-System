@@ -1,7 +1,6 @@
 import numpy as np
 import pymc as pm
 import matplotlib.pyplot as plt
-import math
 
 
 class LDA(object):
@@ -134,6 +133,6 @@ class LDA(object):
             ax[x][y].bar(range(len(t[0])), t[0])
             ax[x][y].set_title("Topic %s" % i)
 
-        plt.suptitle("Vocab word proportions per topic")
+        plt.suptitle("Vocabulary word proportions per topic")
         figure.subplots_adjust(hspace=0.5, wspace=0.5)
         plt.show()

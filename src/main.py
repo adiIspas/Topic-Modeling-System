@@ -14,5 +14,13 @@ data = Processor.generate_data_from_documents(documents, vocabulary_size, word_i
 lda_model = LDA(data, number_of_topics, vocabulary_size)
 lda_model.fit()
 
-lda_model.plot_word_distribution()
-lda_model.show_topic_words(id_word)
+# lda_model.plot_word_distribution()
+# lda_model.show_topic_words(id_word)
+
+print("WORDS\n")
+print(lda_model.show_words())
+
+print("\n")
+
+print("TOPICS\n")
+print(lda_model.show_topics())
