@@ -126,11 +126,14 @@ class LDA(object):
 
         if ax is None:
             plt.clf()
-            figure, ax = plt.subplots(math.floor((len(topics) + 1) / 2), 2, figsize=(10, 10))
+            figure, ax = plt.subplots(np.int((len(topics) + 1) / 2), 2, figsize=(10, 10))
 
         for i, t in enumerate(topics):
-            ax[i / 2][i % 2].bar(range(len(t[0])), t[0])
-            ax[i / 2][i % 2].set_title("Topic %s" % i)
+            x = np.int(i / 2)
+            y = np.int(i % 2)
+            ax[x][y].bar(range(len(t[0])), t[0])
+            ax[x][y].set_title("Topic %s" % i)
 
         plt.suptitle("Vocab word proportions per topic")
         figure.subplots_adjust(hspace=0.5, wspace=0.5)
+        plt.show()
