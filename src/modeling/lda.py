@@ -66,6 +66,9 @@ class LDA(object):
     def show_document_topics(self):
         return self.theta.value
 
+    def show_word_distribution_in_topics(self):
+        return self.phi.value
+
     def show_topic_for_word_in_document(self):
         return self.Z.value
 

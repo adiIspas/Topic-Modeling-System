@@ -3,7 +3,7 @@ from preparation.docs_reader import Reader
 from modeling.lda import LDA
 
 documents_path = '/home/adrian/Unibuc/Probabilistic Programming/Topic-Modeling-System/data/raw'
-number_of_topics = 3
+number_of_topics = 2
 
 documents = Reader.read_documents(documents_path)
 
@@ -22,3 +22,6 @@ print(*lda_model.show_document_topics(), sep="\n")
 
 print("\n\n\n --- Topic for word W in document D --- \n")
 print(*lda_model.show_topic_for_word_in_document(), sep="\n")
+
+print("\n\n\n --- Distribution of words in topics --- \n")
+print(*lda_model.show_word_distribution_in_topics(), sep="\n")
