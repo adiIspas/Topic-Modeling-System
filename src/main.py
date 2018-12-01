@@ -3,24 +3,22 @@ from preparation.docs_reader import Reader
 from modeling.lda import LDA
 
 documents_path = '/home/adrian/Unibuc/Probabilistic Programming/Topic-Modeling-System/data/raw'
-number_of_topics = 5
+number_of_topics = 3
 
 documents = Reader.read_documents(documents_path)
 
 processor = Processor("english")
 sorted_vocabulary, word_id, id_word, vocabulary_size = processor.create_vocabulary(documents)
 
-data = Processor.generate_data_from_documents(documents, vocabulary_size, word_id)
+data = Processor.generate_data_from_documents(documents, word_id)
 lda_model = LDA(data, number_of_topics, vocabulary_size)
 lda_model.fit()
 
-# lda_model.plot_word_distribution()
-# lda_model.show_topic_words(id_word)
+print("\n\n\n --- Show topic words --- \n")
+lda_model.show_topic_words(id_word)
 
-print("WORDS\n")
-print(lda_model.show_words())
+print("\n\n\n --- Documents topics --- \n")
+print(*lda_model.show_document_topics(), sep="\n")
 
-print("\n")
-
-print("TOPICS\n")
-print(lda_model.show_topics())
+print("\n\n\n --- Topic for word W in document D --- \n")
+print(*lda_model.show_topic_for_word_in_document(), sep="\n")

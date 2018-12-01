@@ -1,7 +1,7 @@
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import numpy as np
-
+from array import array
 
 class Processor(object):
 
@@ -27,8 +27,10 @@ class Processor(object):
                         vocabulary[word] = 0
                     vocabulary[word] += 1
 
-        sorted_vocabulary = filter(lambda x: x[1] > self.word_frequency, sorted(vocabulary.items(), key=lambda x: x[1], reverse=True))
-        sorted_vocabulary_2 = filter(lambda x: x[1] > self.word_frequency, sorted(vocabulary.items(), key=lambda x: x[1], reverse=True))
+        # sorted_vocabulary = filter(lambda x: x[1] > self.word_frequency, sorted(vocabulary.items(), key=lambda x: x[1], reverse=True))
+        sorted_vocabulary = filter(lambda x: x[1] > self.word_frequency, Processor.do_nothing(vocabulary.items()))
+        # sorted_vocabulary_2 = filter(lambda x: x[1] > self.word_frequency, sorted(vocabulary.items(), key=lambda x: x[1], reverse=True))
+        sorted_vocabulary_2 = filter(lambda x: x[1] > self.word_frequency, Processor.do_nothing(vocabulary.items()))
 
         word_id = {v[0]: i for i, v in enumerate(sorted_vocabulary)}
         id_word = {i: v[0] for i, v in enumerate(sorted_vocabulary_2)}
@@ -37,14 +39,20 @@ class Processor(object):
         return sorted_vocabulary, word_id, id_word, vocabulary_size
 
     @staticmethod
-    def generate_data_from_documents(documents, vocabulary_size, word_ids):
+    def do_nothing(my_list):
+        return my_list
+
+    @staticmethod
+    def generate_data_from_documents(documents, word_ids):
         data = []
 
         for document in documents:
-            data.append([0] * vocabulary_size)
+            local_data = []
             for word in word_tokenize(document):
                 word = word.lower()
                 if word in word_ids:
-                    data[-1][word_ids[word]] += 1
+                    local_data.append(word_ids[word])
+
+            data.append(local_data)
 
         return data
