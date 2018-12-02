@@ -96,16 +96,16 @@ class LDA(object):
         """
         return self.Z.value
 
-    def get_topics_words(self, id_words):
+    def get_topics_words(self, id_word):
         """
         For each topics get a list of representative words.
         This method should be used in API call.
-        :param id_words: the mapping from ids to its words
+        :param id_word: the mapping from ids to its words
         :return: topics with its representative words
         """
-        topics = []
+        topics = dict()
         for i, t in enumerate(self.phi.value):
-            topics.append([id_words[w_] for w_ in np.argsort(t[0])[-10:] if w_ < (self.vocabulary - 1 - 1)])
+            topics.update({i: [id_word[w_] for w_ in np.argsort(t[0])[-10:] if w_ < (self.vocabulary - 1 - 1)]})
 
         return topics
 
@@ -116,9 +116,10 @@ class LDA(object):
         :param min_percent: minimum weight for each topic per document
         :return: a list of documents with associated topics
         """
-        documents = []
+
+        documents = dict()
         for d, t in enumerate(self.theta.value):
             for v in t:
-                documents.append(list(idx for idx in range(0, len(v)) if v[idx] > min_percent))
+                documents.update({d: list(idx for idx in range(0, len(v)) if v[idx] > min_percent)})
 
         return documents
