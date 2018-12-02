@@ -50,24 +50,48 @@ class LDA(object):
         self.mcmc = pm.MCMC(self.model)
 
     def fit(self, iterations=1000, burn_in=10):
+        """
+        Fit the defined model.
+        :param iterations: number of iterations to do, default 1000
+        :param burn_in: variables will not be tallied until this many iterations are complete, default 10
+        :return: a fitted model
+        """
         self.mcmc.sample(iterations, burn_in)
 
-    def show_topics(self):
-        return self.phi.value
-
     def show_words(self):
+        """
+        Show words from fitted model.
+        :return: a list of words defined by its ids
+        """
         return self.W.value
 
     def show_topic_words(self, id_words):
+        """
+        For each topic show a list of representative words.
+        :param id_words: the mapping from ids to its words
+        :return: topic number and its representative words
+        """
         for i, t in enumerate(self.phi.value):
             print("Topic %i: " % i,
                   ", ".join(id_words[w_] for w_ in np.argsort(t[0])[-10:] if w_ < (self.vocabulary - 1 - 1)))
 
     def show_document_topics(self):
+        """
+        For each document show a list of representative topics.
+        :return: documents with a list of representative topics
+        """
         return self.theta.value
 
     def show_word_distribution_in_topics(self):
+        """
+        For each topic assign a probability for each word to represent this topic.
+        :return: topics with a list of words probabilities
+        """
         return self.phi.value
 
     def show_topic_for_word_in_document(self):
+        """
+        Show most probably topic of word W in document D.
+        :return: a list of topics for each word in each document
+        """
         return self.Z.value
