@@ -50,24 +50,76 @@ class LDA(object):
         self.mcmc = pm.MCMC(self.model)
 
     def fit(self, iterations=1000, burn_in=10):
+        """
+        Fit the defined model.
+        :param iterations: number of iterations to do, default 1000
+        :param burn_in: variables will not be tallied until this many iterations are complete, default 10
+        :return: a fitted model
+        """
         self.mcmc.sample(iterations, burn_in)
 
-    def show_topics(self):
-        return self.phi.value
-
     def show_words(self):
+        """
+        Show words from fitted model.
+        :return: a list of words defined by its ids
+        """
         return self.W.value
 
     def show_topic_words(self, id_words):
+        """
+        For each topic show a list of representative words.
+        :param id_words: the mapping from ids to its words
+        :return: topic number and its representative words
+        """
         for i, t in enumerate(self.phi.value):
             print("Topic %i: " % i,
                   ", ".join(id_words[w_] for w_ in np.argsort(t[0])[-10:] if w_ < (self.vocabulary - 1 - 1)))
 
     def show_document_topics(self):
+        """
+        For each document show a list of representative topics.
+        :return: documents with a list of representative topics
+        """
         return self.theta.value
 
     def show_word_distribution_in_topics(self):
+        """
+        For each topic assign a probability for each word to represent this topic.
+        :return: topics with a list of words probabilities
+        """
         return self.phi.value
 
     def show_topic_for_word_in_document(self):
+        """
+        Show most probably topic of word W in document D.
+        :return: a list of topics for each word in each document
+        """
         return self.Z.value
+
+    def get_topics_words(self, id_word):
+        """
+        For each topics get a list of representative words.
+        This method should be used in API call.
+        :param id_word: the mapping from ids to its words
+        :return: topics with its representative words
+        """
+        topics = dict()
+        for i, t in enumerate(self.phi.value):
+            topics.update({i: [id_word[w_] for w_ in np.argsort(t[0])[-10:] if w_ < (self.vocabulary - 1 - 1)]})
+
+        return topics
+
+    def get_documents_topics(self, min_percent):
+        """
+        For each documents get a list of representative topics that has a weight > :min_percent.
+        This method should be used in API call.
+        :param min_percent: minimum weight for each topic per document
+        :return: a list of documents with associated topics
+        """
+
+        documents = dict()
+        for d, t in enumerate(self.theta.value):
+            for v in t:
+                documents.update({d: list(idx for idx in range(0, len(v)) if v[idx] > min_percent)})
+
+        return documents
