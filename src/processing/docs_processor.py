@@ -1,7 +1,5 @@
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import numpy as np
-import nltk
 
 
 class Processor(object):
@@ -12,10 +10,6 @@ class Processor(object):
 
         self.word_frequency = 0
         self.stopwords = set(stopwords.words(stopwords_language))
-
-    @staticmethod
-    def generate_data_temp(number_of_documents, number_of_words):
-        return np.random.randint(0, 10, size=(number_of_documents, number_of_words))
 
     def create_vocabulary(self, documents):
         vocabulary = dict()
@@ -38,14 +32,16 @@ class Processor(object):
         return sorted_vocabulary, word_id, id_word, vocabulary_size
 
     @staticmethod
-    def generate_data_from_documents(documents, vocabulary_size, word_ids):
+    def generate_data_from_documents(documents, word_ids):
         data = []
 
         for document in documents:
-            data.append([0] * vocabulary_size)
+            local_data = []
             for word in word_tokenize(document):
                 word = word.lower()
                 if word in word_ids:
-                    data[-1][word_ids[word]] += 1
+                    local_data.append(word_ids[word])
+
+            data.append(local_data)
 
         return data

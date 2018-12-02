@@ -14,5 +14,5 @@ class Reader(object):
 
     @staticmethod
     def read_documents(directory):
-        documents = Reader.extract_documents(directory)
+        documents = sorted(Reader.extract_documents(directory))
         return [Reader.read(directory + "/" + document) for document in documents]
