@@ -19,17 +19,23 @@ lda_model = LDA(data, number_of_topics, vocabulary_size)
 lda_model.fit(100000)
 
 # Show results
-print("\n\n\n --- Data --- \n")
+print("\n\n === BASE PROJECT ===")
+print("\n\n --- Data --- \n")
 print(*data, sep="\n")
 
-print("\n\n\n --- Show topic words --- \n")
+print("\n\n --- Show topic words --- \n")
 lda_model.show_topic_words(id_word)
 
-print("\n\n\n --- Documents topics --- \n")
+print("\n\n --- Documents topics --- \n")
 print(*lda_model.show_document_topics(), sep="\n")
 
-print("\n\n\n --- Topic for word W in document D --- \n")
+print("\n\n --- Topic for word W in document D --- \n")
 print(*lda_model.show_topic_for_word_in_document(), sep="\n")
 
-print("\n\n\n --- Distribution of words in topics --- \n")
+print("\n\n --- Distribution of words in topics --- \n")
 print(*lda_model.show_word_distribution_in_topics(), sep="\n")
+
+
+print("\n\n === EXTRAS ===")
+print("\n\n --- Similarity of documents --- \n")
+print(*lda_model.documents_similarity(0.8), sep="\n")

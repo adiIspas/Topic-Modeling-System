@@ -1,5 +1,6 @@
 import numpy as np
 import pymc as pm
+import math
 
 
 class LDA(object):
@@ -109,17 +110,46 @@ class LDA(object):
 
         return topics
 
-    def get_documents_topics(self, min_percent):
+    def get_documents_topics(self, threshold):
         """
-        For each documents get a list of representative topics that has a weight > :min_percent.
+        For each documents get a list of representative topics that has a weight > :threshold.
         This method should be used in API call.
-        :param min_percent: minimum weight for each topic per document
+        :param threshold: minimum weight for each topic per document
         :return: a list of documents with associated topics
         """
-
         documents = dict()
         for d, t in enumerate(self.theta.value):
             for v in t:
-                documents.update({d: list(idx for idx in range(0, len(v)) if v[idx] > min_percent)})
+                documents.update({d: list(idx for idx in range(0, len(v)) if v[idx] > threshold)})
 
         return documents
+
+    def documents_similarity(self, threshold):
+        """
+        Compute similarity between document
+        :param threshold: the minimum value for two documents to be considered similarly
+        :return: similarity score between two documents for each pair of two documents with a similarity score > :threshold
+        """
+        similarities = []
+        for d1, t1 in enumerate(self.theta.value):
+            for d2, t2 in enumerate(self.theta.value):
+                if d1 != d2:
+                    similarities.append([d1, d2, 1 - LDA.__hellinger_distance(t1, t2)])
+
+        similarities = [similarity for similarity in similarities if similarity[2] > threshold]
+        return similarities
+
+
+    @staticmethod
+    def __hellinger_distance(topics_document_1, topics_document_2):
+        """
+        Compute Hellinger distance.
+        :param topics_document_1: a list of topics from document 1
+        :param topics_document_2: a list of topics from document 2
+        :return: distance between documents based on its topics
+        """
+        score = 0
+        for idx in range(len(topics_document_1[0])):
+            score = score + pow((math.sqrt(topics_document_1[0][idx]) - (math.sqrt(topics_document_2[0][idx]))), 2)
+
+        return score
