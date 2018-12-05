@@ -3,9 +3,9 @@ from preparation.docs_reader import Reader
 from modeling.lda import LDA
 
 # Init variables and read documents
-documents_path = '/home/adrian/Unibuc/Probabilistic Programming/Topic-Modeling-System/data/raw'
+documents_path = '../data/raw'
 documents = Reader.read_documents(documents_path)
-number_of_topics = 5
+number_of_topics = 2
 
 # Create a Processor instance with documents content language and create vocabulary from documents
 processor = Processor("english")
@@ -16,7 +16,7 @@ data = Processor.generate_data_from_documents(documents, word_id)
 
 # Create a LDA model instance and fit the model
 lda_model = LDA(data, number_of_topics, vocabulary_size)
-lda_model.fit()
+lda_model.fit(100000)
 
 # Show results
 print("\n\n === BASE PROJECT ===")
